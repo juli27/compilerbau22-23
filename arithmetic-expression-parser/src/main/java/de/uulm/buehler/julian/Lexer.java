@@ -5,7 +5,7 @@ import static java.util.Objects.requireNonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Lexer {
+final class Lexer {
 
   private final String input;
 
@@ -16,21 +16,31 @@ public class Lexer {
     this.input = requireNonNull(input);
   }
 
-  public List<Token> getTokenList() {
+  public List<Token> getRemainingTokens() {
     var tokens = new ArrayList<Token>();
 
-    while (hasNext()) {
-      start = currentPos;
+    Token nextToken;
 
-      tokens.add(nextToken());
-    }
+    do {
+      nextToken = nextToken();
+      while (nextToken == null) {
+        nextToken = nextToken();
+      }
 
-    tokens.add(Token.eof());
+      tokens.add(nextToken);
+
+    } while (nextToken.getTokenClass() != TokenClass.EOF);
 
     return tokens;
   }
 
   public Token nextToken() {
+    if (!hasNext()) {
+      return Token.eof();
+    }
+
+    start = currentPos;
+
     char c = advance();
 
     return switch (c) {
