@@ -22,7 +22,7 @@ final class Parser {
     double result = e();
 
     if (currentToken.getTokenClass() != TokenClass.EOF) {
-      error();
+      error("end of expression expected");
     }
 
     return result;
@@ -31,14 +31,16 @@ final class Parser {
   private double e() {
     double result = t();
 
-    if (currentToken.getTokenClass() == TokenClass.PLUS) {
-      readToken();
+    while (currentToken.getTokenClass() == TokenClass.PLUS || currentToken.getTokenClass() == TokenClass.MINUS) {
+      if (currentToken.getTokenClass() == TokenClass.PLUS) {
+        readToken();
 
-      return result + e();
-    } else if (currentToken.getTokenClass() == TokenClass.MINUS) {
-      readToken();
+        result += t();
+      } else if (currentToken.getTokenClass() == TokenClass.MINUS) {
+        readToken();
 
-      return result - e();
+        result -= t();
+      }
     }
 
     return result;
@@ -47,43 +49,44 @@ final class Parser {
   private double t() {
     double result = p();
 
-    if (currentToken.getTokenClass() == TokenClass.MUL) {
-      readToken();
+    while (currentToken.getTokenClass() == TokenClass.MUL || currentToken.getTokenClass() == TokenClass.DIV) {
+      if (currentToken.getTokenClass() == TokenClass.MUL) {
+        readToken();
 
-      return result * t();
-    } else if (currentToken.getTokenClass() == TokenClass.DIV) {
-      readToken();
+        result *= p();
+      } else if (currentToken.getTokenClass() == TokenClass.DIV) {
+        readToken();
 
-      return result / t();
+        result /= p();
+      }
     }
 
     return result;
   }
 
   private double p() {
-    double result = f();
+    double left = f();
 
     if (currentToken.getTokenClass() == TokenClass.POW) {
       readToken();
       if (currentToken.getTokenClass() != TokenClass.LEFT_PAR) {
-        error();
+        error("'(' expected");
       } else {
         readToken();
 
-        double power = e();
-        result = Math.pow(result, power);
+        double right = e();
 
         if (currentToken.getTokenClass() != TokenClass.RIGHT_PAR) {
-          error();
+          error("')' expected");
         }
 
         readToken();
 
-        return result;
+        return Math.pow(left, right);
       }
     }
 
-    return result;
+    return left;
   }
 
   private double f() {
@@ -97,7 +100,9 @@ final class Parser {
 
         return result;
       } else {
-        error();
+        error("')' expected");
+
+        return 0.0;
       }
     } else if (currentToken.getTokenClass() == TokenClass.NUM) {
       double value = currentToken.getValue();
@@ -105,9 +110,11 @@ final class Parser {
       readToken();
 
       return value;
-    }
+    } else {
+      error("expression expected");
 
-    return 0.0;
+      return 0.0;
+    }
   }
 
   private Token readToken() {
@@ -118,7 +125,7 @@ final class Parser {
     return currentToken;
   }
 
-  private void error() {
-    throw new RuntimeException("parsing error");
+  private void error(String reason) {
+    throw new RuntimeException("parsing error: " + reason);
   }
 }
