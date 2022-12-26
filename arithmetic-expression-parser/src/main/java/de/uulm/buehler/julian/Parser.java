@@ -1,5 +1,7 @@
 package de.uulm.buehler.julian;
 
+import static de.uulm.buehler.julian.Result.err;
+import static de.uulm.buehler.julian.Result.ok;
 import static java.util.Objects.requireNonNull;
 
 final class Parser {
@@ -12,108 +14,104 @@ final class Parser {
     this.lexer = requireNonNull(lexer);
   }
 
-  double parse() {
+  Result<Double, ParseError> parse() {
     readToken();
 
     return s();
   }
 
-  private double s() {
-    double result = e();
+  private Result<Double, ParseError> s() {
+    var result = e();
 
     if (currentToken.getTokenClass() != TokenClass.EOF) {
-      error("end of expression expected");
+      return err(makeError("end of expression expected"));
     }
 
     return result;
   }
 
-  private double e() {
-    double result = t();
+  private Result<Double, ParseError> e() {
+    var result = t();
 
     while (currentToken.getTokenClass() == TokenClass.PLUS || currentToken.getTokenClass() == TokenClass.MINUS) {
       if (currentToken.getTokenClass() == TokenClass.PLUS) {
         readToken();
 
-        result += t();
+        result = result.flatMap(lhs -> t().map(rhs -> lhs + rhs));
       } else if (currentToken.getTokenClass() == TokenClass.MINUS) {
         readToken();
 
-        result -= t();
+        result = result.flatMap(lhs -> t().map(rhs -> lhs - rhs));
       }
     }
 
     return result;
   }
 
-  private double t() {
-    double result = p();
+  private Result<Double, ParseError> t() {
+    var result = p();
 
     while (currentToken.getTokenClass() == TokenClass.MUL || currentToken.getTokenClass() == TokenClass.DIV) {
       if (currentToken.getTokenClass() == TokenClass.MUL) {
         readToken();
 
-        result *= p();
+        result = result.flatMap(lhs -> p().map(rhs -> lhs * rhs));
       } else if (currentToken.getTokenClass() == TokenClass.DIV) {
         readToken();
 
-        result /= p();
+        result = result.flatMap(lhs -> p().map(rhs -> lhs / rhs));
       }
     }
 
     return result;
   }
 
-  private double p() {
-    double left = f();
+  private Result<Double, ParseError> p() {
+    var left = f();
 
     if (currentToken.getTokenClass() == TokenClass.POW) {
       readToken();
-      if (currentToken.getTokenClass() != TokenClass.LEFT_PAR) {
-        error("'(' expected");
-      } else {
+      if (currentToken.getTokenClass() == TokenClass.LEFT_PAR) {
         readToken();
 
-        double right = e();
+        var right = e();
 
         if (currentToken.getTokenClass() != TokenClass.RIGHT_PAR) {
-          error("')' expected");
+          return err(makeError("')' expected"));
         }
 
         readToken();
 
-        return Math.pow(left, right);
+        return left.flatMap(a -> right.map(b -> Math.pow(a, b)));
+      } else {
+        return err(makeError("'(' expected"));
       }
     }
 
     return left;
   }
 
-  private double f() {
+  private Result<Double, ParseError> f() {
     if (currentToken.getTokenClass() == TokenClass.LEFT_PAR) {
       readToken();
 
-      double result = e();
+      var result = e();
 
       if (currentToken.getTokenClass() == TokenClass.RIGHT_PAR) {
         readToken();
 
         return result;
       } else {
-        error("')' expected");
-
-        return 0.0;
+        return err(makeError("')' expected"));
       }
     } else if (currentToken.getTokenClass() == TokenClass.NUM) {
       double value = currentToken.getValue();
 
       readToken();
 
-      return value;
+      return ok(value);
     } else {
-      error("expression expected");
-
-      return 0.0;
+      return err(makeError("expression expected"));
     }
   }
 
@@ -125,7 +123,7 @@ final class Parser {
     return currentToken;
   }
 
-  private void error(String reason) {
-    throw new RuntimeException("parsing error: " + reason);
+  private ParseError makeError(String reason) {
+    return new ParseError(reason);
   }
 }
