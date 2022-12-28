@@ -2,73 +2,58 @@ package de.uulm.buehler.julian;
 
 import static java.util.Objects.requireNonNull;
 
-public class Token {
+public interface Token {
 
-  public static Token plus() {
-    return new Token(TokenClass.PLUS);
+  static Token plus() {
+    return new Common(TokenClass.PLUS);
   }
 
-  public static Token minus() {
-    return new Token(TokenClass.MINUS);
+  static Token minus() {
+    return new Common(TokenClass.MINUS);
   }
 
-  public static Token mul() {
-    return new Token(TokenClass.MUL);
+  static Token mul() {
+    return new Common(TokenClass.MUL);
   }
 
-  public static Token div() {
-    return new Token(TokenClass.DIV);
+  static Token div() {
+    return new Common(TokenClass.DIV);
   }
 
-  public static Token pow() {
-    return new Token(TokenClass.POW);
+  static Token pow() {
+    return new Common(TokenClass.POW);
   }
 
-  public static Token leftPar() {
-    return new Token(TokenClass.LEFT_PAR);
+  static Token leftPar() {
+    return new Common(TokenClass.LEFT_PAR);
   }
 
-  public static Token rightPar() {
-    return new Token(TokenClass.RIGHT_PAR);
+  static Token rightPar() {
+    return new Common(TokenClass.RIGHT_PAR);
   }
 
-  public static Token num(int value) {
-    return new Token(TokenClass.NUM, value);
+  static Token num(int value) {
+    return new NumberLiteral(TokenClass.NUM, value);
   }
 
-  public static Token eof() {
-    return new Token(TokenClass.EOF);
+  static Token eof() {
+    return new Common(TokenClass.EOF);
   }
 
-  private final TokenClass tokenClass;
-  private final int value;
+  TokenClass tokenClass();
 
-  private Token(TokenClass tokenClass) {
-    this(tokenClass, 0);
-  }
+  record Common(TokenClass tokenClass) implements Token {
 
-  private Token(TokenClass tokenClass, int value) {
-    this.tokenClass = requireNonNull(tokenClass);
-    this.value = value;
-  }
-
-  public TokenClass getTokenClass() {
-    return tokenClass;
-  }
-
-  public int getValue() {
-    if (tokenClass != TokenClass.NUM) {
-      throw new IllegalStateException("de.uulm.buehler.julian.Token is not a number");
+    public Common {
+      requireNonNull(tokenClass);
     }
-
-    return value;
   }
 
-  @Override
-  public String toString() {
-    return "Token{" +
-        "tokenClass=" + tokenClass +
-        ", value=" + value +
-        '}';
+  record NumberLiteral(TokenClass tokenClass, int value) implements Token {
+
+    public NumberLiteral(TokenClass tokenClass, int value) {
+      this.tokenClass = TokenClass.NUM;
+      this.value = value;
+    }
   }
 }
