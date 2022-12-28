@@ -35,7 +35,12 @@ final class Lexer {
   }
 
   public Token nextToken() {
-    if (!hasNext()) {
+    // skip whitespace
+    while (!isAtEnd() && Character.isWhitespace(peek())) {
+      advance();
+    }
+
+    if (isAtEnd()) {
       return Token.eof();
     }
 
@@ -52,10 +57,6 @@ final class Lexer {
       case '(' -> Token.leftPar();
       case ')' -> Token.rightPar();
       default -> {
-        if (Character.isWhitespace(c)) {
-          yield null;
-        }
-
         if (Character.isDigit(c)) {
           while (Character.isDigit(peek())) {
             advance();
@@ -70,12 +71,12 @@ final class Lexer {
     };
   }
 
-  private boolean hasNext() {
-    return currentPos < input.length();
+  private boolean isAtEnd() {
+    return currentPos >= input.length();
   }
 
   private char peek() {
-    if (!hasNext()) {
+    if (isAtEnd()) {
       return '\0';
     }
 
