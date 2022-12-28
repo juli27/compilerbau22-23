@@ -2,9 +2,6 @@ package de.uulm.buehler.julian;
 
 import static java.util.Objects.requireNonNull;
 
-import java.util.ArrayList;
-import java.util.List;
-
 final class Lexer {
 
   private final String input;
@@ -14,24 +11,6 @@ final class Lexer {
 
   public Lexer(String input) {
     this.input = requireNonNull(input);
-  }
-
-  public List<Token> getRemainingTokens() {
-    var tokens = new ArrayList<Token>();
-
-    Token nextToken;
-
-    do {
-      nextToken = nextToken();
-      while (nextToken == null) {
-        nextToken = nextToken();
-      }
-
-      tokens.add(nextToken);
-
-    } while (nextToken.getTokenClass() != TokenClass.EOF);
-
-    return tokens;
   }
 
   public Token nextToken() {
