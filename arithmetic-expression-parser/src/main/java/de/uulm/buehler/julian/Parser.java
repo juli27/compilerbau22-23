@@ -23,7 +23,7 @@ final class Parser {
   private Result<Double, ParseError> s() {
     var result = e();
 
-    if (currentToken.tokenClass() != TokenClass.EOF) {
+    if (!match(TokenClass.EOF)) {
       return err(makeError("end of expression expected"));
     }
 
@@ -33,12 +33,12 @@ final class Parser {
   private Result<Double, ParseError> e() {
     var result = t();
 
-    while (currentToken.tokenClass() == TokenClass.PLUS || currentToken.tokenClass() == TokenClass.MINUS) {
-      if (currentToken.tokenClass() == TokenClass.PLUS) {
+    while (match(TokenClass.PLUS) || match(TokenClass.MINUS)) {
+      if (match(TokenClass.PLUS)) {
         readToken();
 
         result = result.flatMap(lhs -> t().map(rhs -> lhs + rhs));
-      } else if (currentToken.tokenClass() == TokenClass.MINUS) {
+      } else if (match(TokenClass.MINUS)) {
         readToken();
 
         result = result.flatMap(lhs -> t().map(rhs -> lhs - rhs));
@@ -51,12 +51,12 @@ final class Parser {
   private Result<Double, ParseError> t() {
     var result = p();
 
-    while (currentToken.tokenClass() == TokenClass.MUL || currentToken.tokenClass() == TokenClass.DIV) {
-      if (currentToken.tokenClass() == TokenClass.MUL) {
+    while (match(TokenClass.MUL) || match(TokenClass.DIV)) {
+      if (match(TokenClass.MUL)) {
         readToken();
 
         result = result.flatMap(lhs -> p().map(rhs -> lhs * rhs));
-      } else if (currentToken.tokenClass() == TokenClass.DIV) {
+      } else if (match(TokenClass.DIV)) {
         readToken();
 
         result = result.flatMap(lhs -> p().map(rhs -> lhs / rhs));
@@ -69,14 +69,14 @@ final class Parser {
   private Result<Double, ParseError> p() {
     var left = f();
 
-    if (currentToken.tokenClass() == TokenClass.POW) {
+    if (match(TokenClass.POW)) {
       readToken();
-      if (currentToken.tokenClass() == TokenClass.LEFT_PAR) {
+      if (match(TokenClass.LEFT_PAR)) {
         readToken();
 
         var right = e();
 
-        if (currentToken.tokenClass() != TokenClass.RIGHT_PAR) {
+        if (!match(TokenClass.RIGHT_PAR)) {
           return err(makeError("')' expected"));
         }
 
@@ -92,12 +92,12 @@ final class Parser {
   }
 
   private Result<Double, ParseError> f() {
-    if (currentToken.tokenClass() == TokenClass.LEFT_PAR) {
+    if (match(TokenClass.LEFT_PAR)) {
       readToken();
 
       var result = e();
 
-      if (currentToken.tokenClass() == TokenClass.RIGHT_PAR) {
+      if (match(TokenClass.RIGHT_PAR)) {
         readToken();
 
         return result;
@@ -113,6 +113,10 @@ final class Parser {
     } else {
       return err(makeError("expression expected"));
     }
+  }
+
+  private boolean match(TokenClass tokenClass) {
+    return currentToken.tokenClass() == tokenClass;
   }
 
   private Token readToken() {
