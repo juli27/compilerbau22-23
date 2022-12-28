@@ -71,21 +71,22 @@ final class Parser {
 
     if (match(TokenClass.POW)) {
       readToken();
-      if (match(TokenClass.LEFT_PAR)) {
-        readToken();
-
-        var right = e();
-
-        if (!match(TokenClass.RIGHT_PAR)) {
-          return err(makeError("')' expected"));
-        }
-
-        readToken();
-
-        return left.flatMap(a -> right.map(b -> Math.pow(a, b)));
-      } else {
+      if (!match(TokenClass.LEFT_PAR)) {
         return err(makeError("'(' expected"));
       }
+
+      readToken();
+
+      var right = e();
+
+      if (!match(TokenClass.RIGHT_PAR)) {
+        return err(makeError("')' expected"));
+      }
+
+      readToken();
+
+      return left.flatMap(a -> right.map(b -> Math.pow(a, b)));
+
     }
 
     return left;
@@ -97,22 +98,23 @@ final class Parser {
 
       var result = e();
 
-      if (match(TokenClass.RIGHT_PAR)) {
-        readToken();
-
-        return result;
-      } else {
+      if (!match(TokenClass.RIGHT_PAR)) {
         return err(makeError("')' expected"));
       }
-    } else if (currentToken instanceof Token.NumberLiteral n) {
+
+      readToken();
+
+      return result;
+    }
+
+    if (currentToken instanceof Token.NumberLiteral n) {
       double value = n.value();
 
       readToken();
 
       return ok(value);
-    } else {
-      return err(makeError("expression expected"));
     }
+    return err(makeError("expression expected"));
   }
 
   private boolean match(TokenClass tokenClass) {
