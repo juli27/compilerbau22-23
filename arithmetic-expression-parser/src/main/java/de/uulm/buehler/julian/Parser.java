@@ -1,7 +1,5 @@
 package de.uulm.buehler.julian;
 
-import static de.uulm.buehler.julian.Result.err;
-import static de.uulm.buehler.julian.Result.ok;
 import static java.util.Objects.requireNonNull;
 
 final class Parser {
@@ -14,82 +12,80 @@ final class Parser {
     this.lexer = requireNonNull(lexer);
   }
 
-  Result<Double, ParseError> parse() {
+  double parse() throws ParseException {
     readToken();
 
     return s();
   }
 
-  private Result<Double, ParseError> s() {
-    return e()
-        .flatMap(value -> consumeToken(TokenClass.EOF)
-            .map(token -> value));
+  private double s() throws ParseException {
+    var result = e();
+
+    consumeToken(TokenClass.EOF);
+
+    return result;
   }
 
-  private Result<Double, ParseError> e() {
+  private double e() throws ParseException {
     var result = t();
-
-    if (result.isErr()) {
-      return result;
-    }
 
     while (check(TokenClass.PLUS) || check(TokenClass.MINUS)) {
       if (match(TokenClass.PLUS)) {
-        result = result.flatMap(lhs -> t().map(rhs -> lhs + rhs));
+        result += t();
       } else if (match(TokenClass.MINUS)) {
-        result = result.flatMap(lhs -> t().map(rhs -> lhs - rhs));
+        result -= t();
       }
     }
 
     return result;
   }
 
-  private Result<Double, ParseError> t() {
+  private double t() throws ParseException {
     var result = p();
-
-    if (result.isErr()) {
-      return result;
-    }
 
     while (check(TokenClass.MUL) || check(TokenClass.DIV)) {
       if (match(TokenClass.MUL)) {
-        result = result.flatMap(lhs -> p().map(rhs -> lhs * rhs));
+        result *= p();
       } else if (match(TokenClass.DIV)) {
-        result = result.flatMap(lhs -> p().map(rhs -> lhs / rhs));
+        result /= p();
       }
     }
 
     return result;
   }
 
-  private Result<Double, ParseError> p() {
-    return f()
-        .flatMap(lhs -> {
-          if (!match(TokenClass.POW)) {
-            return ok(lhs);
-          }
+  private double p() throws ParseException {
+    var result = f();
 
-          return consumeToken(TokenClass.LEFT_PAR)
-              .then(this::e)
-              .flatMap(rhs -> consumeToken(TokenClass.RIGHT_PAR)
-                  .map(rParen -> Math.pow(lhs, rhs)));
-        });
+    if (!match(TokenClass.POW)) {
+      return result;
+    }
+
+    consumeToken(TokenClass.LEFT_PAR);
+
+    result = Math.pow(result, e());
+
+    consumeToken(TokenClass.RIGHT_PAR);
+
+    return result;
   }
 
-  private Result<Double, ParseError> f() {
+  private double f() throws ParseException {
     if (match(TokenClass.LEFT_PAR)) {
-      return e()
-          .flatMap(value -> consumeToken(TokenClass.RIGHT_PAR)
-              .then(() -> ok(value)));
+      var result = e();
+
+      consumeToken(TokenClass.RIGHT_PAR);
+
+      return result;
     }
 
     if (currentToken instanceof Token.NumberLiteral(var value)) {
       readToken();
 
-      return ok((double) value);
+      return value;
     }
 
-    return err(makeError("expression expected"));
+    throw makeError("expression expected");
   }
 
   private boolean match(TokenClass tokenClass) {
@@ -106,12 +102,12 @@ final class Parser {
     return currentToken.tokenClass() == tokenClass;
   }
 
-  private Result<Token, ParseError> consumeToken(TokenClass tokenClass) {
+  private Token consumeToken(TokenClass tokenClass) throws ParseException {
     if (!check(tokenClass)) {
-      return err(makeError(tokenClass + " expected"));
+      throw makeError(tokenClass + " expected");
     }
 
-    return ok(readToken());
+    return readToken();
   }
 
   private Token readToken() {
@@ -120,7 +116,7 @@ final class Parser {
     return currentToken;
   }
 
-  private ParseError makeError(String reason) {
-    return new ParseError(reason);
+  private ParseException makeError(String reason) {
+    return new ParseException(reason);
   }
 }
