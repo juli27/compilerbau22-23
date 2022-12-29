@@ -107,12 +107,10 @@ final class Parser {
       return result;
     }
 
-    if (currentToken instanceof Token.NumberLiteral n) {
-      double value = n.value();
-
+    if (currentToken instanceof Token.NumberLiteral(var value)) {
       readToken();
 
-      return ok(value);
+      return ok((double) value);
     }
     return err(makeError("expression expected"));
   }

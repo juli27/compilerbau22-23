@@ -33,7 +33,7 @@ public interface Token {
   }
 
   static Token num(int value) {
-    return new NumberLiteral(TokenClass.NUM, value);
+    return new NumberLiteral(value);
   }
 
   static Token eof() {
@@ -49,11 +49,15 @@ public interface Token {
     }
   }
 
-  record NumberLiteral(TokenClass tokenClass, int value) implements Token {
+  record NumberLiteral(int value) implements Token {
 
-    public NumberLiteral(TokenClass tokenClass, int value) {
-      this.tokenClass = TokenClass.NUM;
+    public NumberLiteral(int value) {
       this.value = value;
+    }
+
+    @Override
+    public TokenClass tokenClass() {
+      return TokenClass.NUM;
     }
   }
 }
