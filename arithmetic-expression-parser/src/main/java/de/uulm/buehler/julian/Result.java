@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public sealed interface Result<T, E> {
 
@@ -29,6 +30,10 @@ public sealed interface Result<T, E> {
   <U> Result<U, E> flatMap(Function<? super T, ? extends Result<U, E>> mapper);
 
   void handle(Consumer<T> okHandler, Consumer<E> errorHandler);
+
+  default <U> Result<U, E> then(Supplier<Result<U,E>> next) {
+    return flatMap(t -> next.get());
+  }
 
   record Ok<T, E>(T value) implements Result<T, E> {
 

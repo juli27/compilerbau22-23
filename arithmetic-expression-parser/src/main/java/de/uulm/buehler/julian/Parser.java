@@ -21,13 +21,9 @@ final class Parser {
   }
 
   private Result<Double, ParseError> s() {
-    return e().flatMap(value -> {
-      if (!match(TokenClass.EOF)) {
-        return err(makeError("end of expression expected"));
-      }
-
-      return ok(value);
-    });
+    return e()
+        .flatMap(value -> consumeToken(TokenClass.EOF)
+            .map(token -> value));
   }
 
   private Result<Double, ParseError> e() {
@@ -37,14 +33,10 @@ final class Parser {
       return result;
     }
 
-    while (match(TokenClass.PLUS) || match(TokenClass.MINUS)) {
+    while (check(TokenClass.PLUS) || check(TokenClass.MINUS)) {
       if (match(TokenClass.PLUS)) {
-        readToken();
-
         result = result.flatMap(lhs -> t().map(rhs -> lhs + rhs));
       } else if (match(TokenClass.MINUS)) {
-        readToken();
-
         result = result.flatMap(lhs -> t().map(rhs -> lhs - rhs));
       }
     }
@@ -59,14 +51,10 @@ final class Parser {
       return result;
     }
 
-    while (match(TokenClass.MUL) || match(TokenClass.DIV)) {
+    while (check(TokenClass.MUL) || check(TokenClass.DIV)) {
       if (match(TokenClass.MUL)) {
-        readToken();
-
         result = result.flatMap(lhs -> p().map(rhs -> lhs * rhs));
       } else if (match(TokenClass.DIV)) {
-        readToken();
-
         result = result.flatMap(lhs -> p().map(rhs -> lhs / rhs));
       }
     }
@@ -75,44 +63,24 @@ final class Parser {
   }
 
   private Result<Double, ParseError> p() {
-    return f().flatMap(lhs -> {
-      if (!match(TokenClass.POW)) {
-        return ok(lhs);
-      }
+    return f()
+        .flatMap(lhs -> {
+          if (!match(TokenClass.POW)) {
+            return ok(lhs);
+          }
 
-      readToken();
-
-      if (!match(TokenClass.LEFT_PAR)) {
-        return err(makeError("'(' expected"));
-      }
-
-      readToken();
-
-      return e().flatMap(rhs -> {
-        if (!match(TokenClass.RIGHT_PAR)) {
-          return err(makeError("')' expected"));
-        }
-
-        readToken();
-
-        return ok(Math.pow(lhs, rhs));
-      });
-    });
+          return consumeToken(TokenClass.LEFT_PAR)
+              .then(this::e)
+              .flatMap(rhs -> consumeToken(TokenClass.RIGHT_PAR)
+                  .map(rParen -> Math.pow(lhs, rhs)));
+        });
   }
 
   private Result<Double, ParseError> f() {
     if (match(TokenClass.LEFT_PAR)) {
-      readToken();
-
-      return e().flatMap(value -> {
-        if (!match(TokenClass.RIGHT_PAR)) {
-          return err(makeError("')' expected"));
-        }
-
-        readToken();
-
-        return ok(value);
-      });
+      return e()
+          .flatMap(value -> consumeToken(TokenClass.RIGHT_PAR)
+              .then(() -> ok(value)));
     }
 
     if (currentToken instanceof Token.NumberLiteral(var value)) {
@@ -125,13 +93,29 @@ final class Parser {
   }
 
   private boolean match(TokenClass tokenClass) {
+    if (currentToken.tokenClass() == tokenClass) {
+      readToken();
+
+      return true;
+    }
+
+    return false;
+  }
+
+  private boolean check(TokenClass tokenClass) {
     return currentToken.tokenClass() == tokenClass;
   }
 
+  private Result<Token, ParseError> consumeToken(TokenClass tokenClass) {
+    if (!check(tokenClass)) {
+      return err(makeError(tokenClass + " expected"));
+    }
+
+    return ok(readToken());
+  }
+
   private Token readToken() {
-    do {
-      currentToken = lexer.nextToken();
-    } while (currentToken == null);
+    currentToken = lexer.nextToken();
 
     return currentToken;
   }
