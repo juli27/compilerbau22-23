@@ -38,12 +38,12 @@ public sealed interface Result<T, E> {
 
     @Override
     public boolean isOk() {
-      return false;
+      return true;
     }
 
     @Override
     public boolean isErr() {
-      return true;
+      return false;
     }
 
     @Override
@@ -80,12 +80,12 @@ public sealed interface Result<T, E> {
 
     @Override
     public boolean isOk() {
-      return true;
+      return false;
     }
 
     @Override
     public boolean isErr() {
-      return false;
+      return true;
     }
 
     @Override

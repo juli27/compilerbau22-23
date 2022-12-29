@@ -21,17 +21,21 @@ final class Parser {
   }
 
   private Result<Double, ParseError> s() {
-    var result = e();
+    return e().flatMap(value -> {
+      if (!match(TokenClass.EOF)) {
+        return err(makeError("end of expression expected"));
+      }
 
-    if (!match(TokenClass.EOF)) {
-      return err(makeError("end of expression expected"));
-    }
-
-    return result;
+      return ok(value);
+    });
   }
 
   private Result<Double, ParseError> e() {
     var result = t();
+
+    if (result.isErr()) {
+      return result;
+    }
 
     while (match(TokenClass.PLUS) || match(TokenClass.MINUS)) {
       if (match(TokenClass.PLUS)) {
@@ -51,6 +55,10 @@ final class Parser {
   private Result<Double, ParseError> t() {
     var result = p();
 
+    if (result.isErr()) {
+      return result;
+    }
+
     while (match(TokenClass.MUL) || match(TokenClass.DIV)) {
       if (match(TokenClass.MUL)) {
         readToken();
@@ -67,44 +75,44 @@ final class Parser {
   }
 
   private Result<Double, ParseError> p() {
-    var left = f();
+    return f().flatMap(lhs -> {
+      if (!match(TokenClass.POW)) {
+        return ok(lhs);
+      }
 
-    if (match(TokenClass.POW)) {
       readToken();
+
       if (!match(TokenClass.LEFT_PAR)) {
         return err(makeError("'(' expected"));
       }
 
       readToken();
 
-      var right = e();
+      return e().flatMap(rhs -> {
+        if (!match(TokenClass.RIGHT_PAR)) {
+          return err(makeError("')' expected"));
+        }
 
-      if (!match(TokenClass.RIGHT_PAR)) {
-        return err(makeError("')' expected"));
-      }
+        readToken();
 
-      readToken();
-
-      return left.flatMap(a -> right.map(b -> Math.pow(a, b)));
-
-    }
-
-    return left;
+        return ok(Math.pow(lhs, rhs));
+      });
+    });
   }
 
   private Result<Double, ParseError> f() {
     if (match(TokenClass.LEFT_PAR)) {
       readToken();
 
-      var result = e();
+      return e().flatMap(value -> {
+        if (!match(TokenClass.RIGHT_PAR)) {
+          return err(makeError("')' expected"));
+        }
 
-      if (!match(TokenClass.RIGHT_PAR)) {
-        return err(makeError("')' expected"));
-      }
+        readToken();
 
-      readToken();
-
-      return result;
+        return ok(value);
+      });
     }
 
     if (currentToken instanceof Token.NumberLiteral(var value)) {
@@ -112,6 +120,7 @@ final class Parser {
 
       return ok((double) value);
     }
+
     return err(makeError("expression expected"));
   }
 
