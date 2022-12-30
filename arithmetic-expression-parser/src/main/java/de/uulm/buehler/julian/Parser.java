@@ -1,19 +1,13 @@
 package de.uulm.buehler.julian;
 
-import static java.util.Objects.requireNonNull;
-
-final class Parser {
-
-  private final Lexer lexer;
-
-  private Token currentToken;
+final class Parser extends RecursiveDescentParser {
 
   Parser(Lexer lexer) {
-    this.lexer = requireNonNull(lexer);
+    super(lexer);
   }
 
   double parse() throws ParseException {
-    readToken();
+    advance();
 
     return s();
   }
@@ -21,7 +15,7 @@ final class Parser {
   private double s() throws ParseException {
     var result = e();
 
-    consumeToken(TokenClass.EOF);
+    consume(TokenClass.EOF);
 
     return result;
   }
@@ -61,11 +55,11 @@ final class Parser {
       return result;
     }
 
-    consumeToken(TokenClass.LEFT_PAR);
+    consume(TokenClass.LEFT_PAR);
 
     result = Math.pow(result, e());
 
-    consumeToken(TokenClass.RIGHT_PAR);
+    consume(TokenClass.RIGHT_PAR);
 
     return result;
   }
@@ -74,49 +68,17 @@ final class Parser {
     if (match(TokenClass.LEFT_PAR)) {
       var result = e();
 
-      consumeToken(TokenClass.RIGHT_PAR);
+      consume(TokenClass.RIGHT_PAR);
 
       return result;
     }
 
-    if (currentToken instanceof Token.NumberLiteral(var value)) {
-      readToken();
+    if (peek() instanceof Token.NumberLiteral(var value)) {
+      advance();
 
       return value;
     }
 
     throw makeError("expression expected");
-  }
-
-  private boolean match(TokenClass tokenClass) {
-    if (currentToken.tokenClass() == tokenClass) {
-      readToken();
-
-      return true;
-    }
-
-    return false;
-  }
-
-  private boolean check(TokenClass tokenClass) {
-    return currentToken.tokenClass() == tokenClass;
-  }
-
-  private Token consumeToken(TokenClass tokenClass) throws ParseException {
-    if (!check(tokenClass)) {
-      throw makeError(tokenClass + " expected");
-    }
-
-    return readToken();
-  }
-
-  private Token readToken() {
-    currentToken = lexer.nextToken();
-
-    return currentToken;
-  }
-
-  private ParseException makeError(String reason) {
-    return new ParseException(reason);
   }
 }
