@@ -6,7 +6,7 @@ public abstract class RecursiveDescentParser {
 
   private final ExpressionLexer lexer;
 
-  private Token currentToken;
+  private ExpressionToken currentToken;
 
   protected RecursiveDescentParser(ExpressionLexer lexer) {
     this.lexer = requireNonNull(lexer);
@@ -16,7 +16,7 @@ public abstract class RecursiveDescentParser {
     return new ParseException(reason);
   }
 
-  public Token peek() {
+  public ExpressionToken peek() {
     return currentToken;
   }
 
@@ -24,7 +24,7 @@ public abstract class RecursiveDescentParser {
     return currentToken.tokenClass() == tokenClass;
   }
 
-  protected Token advance() {
+  protected ExpressionToken advance() {
     currentToken = lexer.nextToken();
 
     return currentToken;
@@ -40,7 +40,7 @@ public abstract class RecursiveDescentParser {
     return true;
   }
 
-  protected Token consume(TokenClass tokenClass) throws ParseException {
+  protected ExpressionToken consume(TokenClass tokenClass) throws ParseException {
     if (!check(tokenClass)) {
       throw makeError(tokenClass + " expected");
     }

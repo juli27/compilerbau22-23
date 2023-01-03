@@ -13,14 +13,14 @@ public final class ExpressionLexer {
     this.input = requireNonNull(input);
   }
 
-  public Token nextToken() {
+  public ExpressionToken nextToken() {
     // skip whitespace
     while (!isAtEnd() && Character.isWhitespace(peek())) {
       advance();
     }
 
     if (isAtEnd()) {
-      return Token.eof();
+      return ExpressionToken.eof();
     }
 
     start = currentPos;
@@ -28,20 +28,20 @@ public final class ExpressionLexer {
     char c = advance();
 
     return switch (c) {
-      case '+' -> Token.plus();
-      case '-' -> Token.minus();
-      case '*' -> Token.mul();
-      case '/' -> Token.div();
-      case '^' -> Token.pow();
-      case '(' -> Token.leftPar();
-      case ')' -> Token.rightPar();
+      case '+' -> ExpressionToken.plus();
+      case '-' -> ExpressionToken.minus();
+      case '*' -> ExpressionToken.mul();
+      case '/' -> ExpressionToken.div();
+      case '^' -> ExpressionToken.pow();
+      case '(' -> ExpressionToken.leftPar();
+      case ')' -> ExpressionToken.rightPar();
       default -> {
         if (Character.isDigit(c)) {
           while (Character.isDigit(peek())) {
             advance();
           }
 
-          yield Token.num(Integer.parseInt(input.substring(start, currentPos)));
+          yield ExpressionToken.num(Integer.parseInt(input.substring(start, currentPos)));
         }
 
         // TODO: keep scanning in order to find more errors

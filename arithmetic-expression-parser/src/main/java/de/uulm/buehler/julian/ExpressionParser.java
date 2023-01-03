@@ -73,7 +73,7 @@ final class ExpressionParser extends RecursiveDescentParser {
       return result;
     }
 
-    if (peek() instanceof Token.NumberLiteral(var value)) {
+    if (peek() instanceof ExpressionToken.NumberLiteral(var value)) {
       advance();
 
       return value;

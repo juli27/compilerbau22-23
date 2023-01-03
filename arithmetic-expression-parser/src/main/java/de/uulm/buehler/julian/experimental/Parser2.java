@@ -5,7 +5,7 @@ import static de.uulm.buehler.julian.experimental.Result.ok;
 import static java.util.Objects.requireNonNull;
 
 import de.uulm.buehler.julian.ExpressionLexer;
-import de.uulm.buehler.julian.Token;
+import de.uulm.buehler.julian.ExpressionToken;
 import de.uulm.buehler.julian.TokenClass;
 
 /**
@@ -15,7 +15,7 @@ final class Parser2 {
 
   private final ExpressionLexer lexer;
 
-  private Token currentToken;
+  private ExpressionToken currentToken;
 
   Parser2(ExpressionLexer lexer) {
     this.lexer = requireNonNull(lexer);
@@ -90,7 +90,7 @@ final class Parser2 {
               .then(() -> ok(value)));
     }
 
-    if (currentToken instanceof Token.NumberLiteral(var value)) {
+    if (currentToken instanceof ExpressionToken.NumberLiteral(var value)) {
       readToken();
 
       return ok((double) value);
@@ -113,7 +113,7 @@ final class Parser2 {
     return currentToken.tokenClass() == tokenClass;
   }
 
-  private Result<Token, ParseError> consumeToken(TokenClass tokenClass) {
+  private Result<ExpressionToken, ParseError> consumeToken(TokenClass tokenClass) {
     if (!check(tokenClass)) {
       return err(makeError(tokenClass + " expected"));
     }
@@ -121,7 +121,7 @@ final class Parser2 {
     return ok(readToken());
   }
 
-  private Token readToken() {
+  private ExpressionToken readToken() {
     currentToken = lexer.nextToken();
 
     return currentToken;

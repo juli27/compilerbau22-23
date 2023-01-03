@@ -2,54 +2,54 @@ package de.uulm.buehler.julian;
 
 import static java.util.Objects.requireNonNull;
 
-public interface Token {
+public interface ExpressionToken {
 
-  static Token plus() {
+  static ExpressionToken plus() {
     return new Common(TokenClass.PLUS);
   }
 
-  static Token minus() {
+  static ExpressionToken minus() {
     return new Common(TokenClass.MINUS);
   }
 
-  static Token mul() {
+  static ExpressionToken mul() {
     return new Common(TokenClass.MUL);
   }
 
-  static Token div() {
+  static ExpressionToken div() {
     return new Common(TokenClass.DIV);
   }
 
-  static Token pow() {
+  static ExpressionToken pow() {
     return new Common(TokenClass.POW);
   }
 
-  static Token leftPar() {
+  static ExpressionToken leftPar() {
     return new Common(TokenClass.LEFT_PAR);
   }
 
-  static Token rightPar() {
+  static ExpressionToken rightPar() {
     return new Common(TokenClass.RIGHT_PAR);
   }
 
-  static Token num(int value) {
+  static ExpressionToken num(int value) {
     return new NumberLiteral(value);
   }
 
-  static Token eof() {
+  static ExpressionToken eof() {
     return new Common(TokenClass.EOF);
   }
 
   TokenClass tokenClass();
 
-  record Common(TokenClass tokenClass) implements Token {
+  record Common(TokenClass tokenClass) implements ExpressionToken {
 
     public Common {
       requireNonNull(tokenClass);
     }
   }
 
-  record NumberLiteral(int value) implements Token {
+  record NumberLiteral(int value) implements ExpressionToken {
 
     public NumberLiteral(int value) {
       this.value = value;
