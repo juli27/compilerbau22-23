@@ -2,7 +2,9 @@ package de.uulm.buehler.julian;
 
 import static java.util.Objects.requireNonNull;
 
-public interface ExpressionToken {
+import de.uulm.parsing.Token;
+
+public interface ExpressionToken extends Token<TokenClass> {
 
   static ExpressionToken plus() {
     return new Common(TokenClass.PLUS);
@@ -39,8 +41,6 @@ public interface ExpressionToken {
   static ExpressionToken eof() {
     return new Common(TokenClass.EOF);
   }
-
-  TokenClass tokenClass();
 
   record Common(TokenClass tokenClass) implements ExpressionToken {
 

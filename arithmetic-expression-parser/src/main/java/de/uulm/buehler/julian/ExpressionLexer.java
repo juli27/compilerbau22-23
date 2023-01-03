@@ -2,7 +2,9 @@ package de.uulm.buehler.julian;
 
 import static java.util.Objects.requireNonNull;
 
-public final class ExpressionLexer {
+import de.uulm.parsing.Lexer;
+
+public final class ExpressionLexer implements Lexer<TokenClass> {
 
   private final String input;
 
@@ -13,6 +15,7 @@ public final class ExpressionLexer {
     this.input = requireNonNull(input);
   }
 
+  @Override
   public ExpressionToken nextToken() {
     // skip whitespace
     while (!isAtEnd() && Character.isWhitespace(peek())) {

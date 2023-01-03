@@ -1,6 +1,9 @@
 package de.uulm.buehler.julian;
 
-final class ExpressionParser extends RecursiveDescentParser {
+import de.uulm.parsing.ParseException;
+import de.uulm.parsing.RecursiveDescentParser;
+
+final class ExpressionParser extends RecursiveDescentParser<TokenClass> {
 
   ExpressionParser(ExpressionLexer lexer) {
     super(lexer);

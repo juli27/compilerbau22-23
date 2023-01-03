@@ -5,6 +5,10 @@ plugins {
 group = "org.example"
 version = "1.0-SNAPSHOT"
 
+dependencies {
+    implementation("de.uulm:lib")
+}
+
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(19))

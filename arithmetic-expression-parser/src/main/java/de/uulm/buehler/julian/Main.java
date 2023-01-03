@@ -1,5 +1,6 @@
 package de.uulm.buehler.julian;
 
+import de.uulm.parsing.ParseException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
