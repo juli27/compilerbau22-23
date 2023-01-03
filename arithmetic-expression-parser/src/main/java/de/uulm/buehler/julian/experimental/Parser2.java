@@ -1,11 +1,15 @@
-package de.uulm.buehler.julian;
+package de.uulm.buehler.julian.experimental;
 
-import static de.uulm.buehler.julian.Result.err;
-import static de.uulm.buehler.julian.Result.ok;
+import static de.uulm.buehler.julian.experimental.Result.err;
+import static de.uulm.buehler.julian.experimental.Result.ok;
 import static java.util.Objects.requireNonNull;
 
+import de.uulm.buehler.julian.ExpressionLexer;
+import de.uulm.buehler.julian.Token;
+import de.uulm.buehler.julian.TokenClass;
+
 /**
- * This is a experimental version of the Parser with a Result type instead of checked exceptions.
+ * This is an experimental version of the Parser with a Result type instead of checked exceptions.
  */
 final class Parser2 {
 
