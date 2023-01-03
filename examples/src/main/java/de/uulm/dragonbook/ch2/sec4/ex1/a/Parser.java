@@ -11,16 +11,10 @@ import de.uulm.parsing.examples.Examples;
 final class Parser extends RecursiveDescentParser<Character> {
 
   public static void main(String[] args) {
-    Examples.forEachLine(s -> {
+    Examples.forEachLineWithAcceptingParser(s -> {
       Parser parser = new Parser(Lexer.trivial(s));
 
-      try {
-        parser.parse();
-
-        System.out.println("accepted");
-      } catch (ParseException pe) {
-        System.out.println("parsing error: " + pe.getMessage());
-      }
+      return parser::parse;
     });
   }
 
