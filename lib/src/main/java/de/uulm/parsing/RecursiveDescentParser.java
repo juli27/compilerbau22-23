@@ -24,6 +24,17 @@ public abstract class RecursiveDescentParser<C> {
     return currentToken.tokenClass().equals(tokenClass);
   }
 
+  @SafeVarargs
+  protected final boolean checkOneOf(C... tokenClasses) {
+    for (var tokenClass : tokenClasses) {
+      if (check(tokenClass)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   protected Token<C> advance() {
     currentToken = lexer.nextToken();
 

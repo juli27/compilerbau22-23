@@ -26,7 +26,7 @@ final class ExpressionParser extends RecursiveDescentParser<TokenClass> {
   private double e() throws ParseException {
     var result = t();
 
-    while (check(TokenClass.PLUS) || check(TokenClass.MINUS)) {
+    while (checkOneOf(TokenClass.PLUS, TokenClass.MINUS)) {
       if (match(TokenClass.PLUS)) {
         result += t();
       } else if (match(TokenClass.MINUS)) {
@@ -40,7 +40,7 @@ final class ExpressionParser extends RecursiveDescentParser<TokenClass> {
   private double t() throws ParseException {
     var result = p();
 
-    while (check(TokenClass.MUL) || check(TokenClass.DIV)) {
+    while (checkOneOf(TokenClass.MUL, TokenClass.DIV)) {
       if (match(TokenClass.MUL)) {
         result *= p();
       } else if (match(TokenClass.DIV)) {
