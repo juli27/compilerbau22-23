@@ -2,7 +2,7 @@ package de.uulm.buehler.julian;
 
 final class Parser extends RecursiveDescentParser {
 
-  Parser(Lexer lexer) {
+  Parser(ExpressionLexer lexer) {
     super(lexer);
   }
 

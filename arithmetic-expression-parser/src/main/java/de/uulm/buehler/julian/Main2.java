@@ -16,7 +16,7 @@ final class Main2 {
     System.out.print("expr> ");
 
     in.lines()
-        .map(Lexer::new)
+        .map(ExpressionLexer::new)
         .map(Parser2::new)
         .map(Parser2::parse)
         .forEach(parseResult -> {

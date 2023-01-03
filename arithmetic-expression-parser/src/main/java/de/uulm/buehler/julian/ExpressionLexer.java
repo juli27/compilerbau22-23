@@ -2,14 +2,14 @@ package de.uulm.buehler.julian;
 
 import static java.util.Objects.requireNonNull;
 
-final class Lexer {
+public final class ExpressionLexer {
 
   private final String input;
 
   private int start = 0;
   private int currentPos = 0;
 
-  public Lexer(String input) {
+  public ExpressionLexer(String input) {
     this.input = requireNonNull(input);
   }
 

@@ -11,7 +11,7 @@ final class Main {
     System.out.print("expr> ");
 
     in.lines()
-        .map(Lexer::new)
+        .map(ExpressionLexer::new)
         .map(Parser::new)
         .forEach(parser -> {
           try {

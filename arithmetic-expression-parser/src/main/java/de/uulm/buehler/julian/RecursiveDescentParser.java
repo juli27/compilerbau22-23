@@ -4,11 +4,11 @@ import static java.util.Objects.requireNonNull;
 
 public abstract class RecursiveDescentParser {
 
-  private final Lexer lexer;
+  private final ExpressionLexer lexer;
 
   private Token currentToken;
 
-  protected RecursiveDescentParser(Lexer lexer) {
+  protected RecursiveDescentParser(ExpressionLexer lexer) {
     this.lexer = requireNonNull(lexer);
   }
 

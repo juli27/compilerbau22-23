@@ -9,11 +9,11 @@ import static java.util.Objects.requireNonNull;
  */
 final class Parser2 {
 
-  private final Lexer lexer;
+  private final ExpressionLexer lexer;
 
   private Token currentToken;
 
-  Parser2(Lexer lexer) {
+  Parser2(ExpressionLexer lexer) {
     this.lexer = requireNonNull(lexer);
   }
 
