@@ -12,7 +12,7 @@ final class Main {
 
     in.lines()
         .map(ExpressionLexer::new)
-        .map(Parser::new)
+        .map(ExpressionParser::new)
         .forEach(parser -> {
           try {
             double value = parser.parse();
