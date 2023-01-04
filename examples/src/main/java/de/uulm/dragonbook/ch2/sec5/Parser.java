@@ -12,8 +12,7 @@ final class Parser extends RecursiveDescentParser<Character> {
       Parser parser = new Parser(Lexer.trivial(s));
 
       try {
-        // output as side effect, ugh
-        parser.parse();
+        System.out.println(parser.parse());
       } catch (ParseException pe) {
         System.out.println("parsing error: " + pe.getMessage());
       }
@@ -24,39 +23,39 @@ final class Parser extends RecursiveDescentParser<Character> {
     super(lexer);
   }
 
-  private void parse() throws ParseException {
+  private String parse() throws ParseException {
     advance();
 
-    expr();
+    var string = expr();
 
     consume('\0');
 
-    System.out.println();
+    return string.toString();
   }
 
-  private void expr() throws ParseException {
-    term();
+  private StringBuilder expr() throws ParseException {
+    var string = term();
 
     while (true) {
       if (match('+')) {
-        term();
-        System.out.print('+');
+        string.append(term());
+        string.append('+');
       } else if (match('-')) {
-        term();
-        System.out.print('-');
+        string.append(term());
+        string.append('-');
       } else {
-        return;
+        return string;
       }
     }
   }
 
-  private void term() throws ParseException {
+  private StringBuilder term() throws ParseException {
     var tokenClass = peek().tokenClass();
 
     if (Character.isDigit(tokenClass)) {
-      System.out.print(tokenClass);
-
       advance();
+
+      return new StringBuilder(String.valueOf(tokenClass));
     } else {
       throw makeError("syntax error");
     }
