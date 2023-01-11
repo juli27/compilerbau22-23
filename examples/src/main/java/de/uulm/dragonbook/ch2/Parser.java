@@ -1,4 +1,4 @@
-package de.uulm.dragonbook.ch2.sec5;
+package de.uulm.dragonbook.ch2;
 
 import de.uulm.parsing.Lexer;
 import de.uulm.parsing.ParseException;
