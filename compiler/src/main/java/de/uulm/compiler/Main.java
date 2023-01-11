@@ -1,4 +1,4 @@
-package de.uulm.buehler.julian.compiler;
+package de.uulm.compiler;
 
 final class Main {
 
