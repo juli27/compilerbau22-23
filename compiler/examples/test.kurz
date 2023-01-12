@@ -1,0 +1,8 @@
+var x: i8 = 1
+
+procedure(x)
+
+x = 2
+
+procedure(x)
+
