@@ -1,6 +1,5 @@
 package de.uulm.compiler;
 
-import de.uulm.compiler.parser.KurzBaseVisitor;
 import de.uulm.compiler.parser.KurzLexer;
 import de.uulm.compiler.parser.KurzParser;
 import java.nio.charset.StandardCharsets;
@@ -25,10 +24,10 @@ public final class Compiler implements Callable<Integer> {
     var lexer = new KurzLexer(charStream);
     var parser = new KurzParser(new CommonTokenStream(lexer));
 
+    var visitor = new AstTranslator();
+    var ast = visitor.visitProgram(parser.program());
 
-    var p = parser.program();
-    var visitor = new KurzBaseVisitor<>();
-    visitor.visitProgram(p);
+    System.out.println(ast);
 
     return 0;
   }
