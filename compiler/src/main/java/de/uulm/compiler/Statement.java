@@ -1,19 +1,19 @@
 package de.uulm.compiler;
 
-import de.uulm.compiler.Expression.Id;
+import org.antlr.v4.runtime.Token;
 import java.util.List;
 
 public interface Statement {
 
-  record ExpressionList(List<Expression> expressions) {
+  record VarDecl(Token name, Token type, Expression value) implements Statement {
+
   }
 
-  record VarDecl(Id name, Id type, Expression value) implements Statement {
+  record Assignment(Token name, Expression value) implements Statement {
+
   }
 
-  record Assignment(Expression name, Expression value) implements Statement {
-  }
+  record ProcCall(Token name, List<Expression> params) implements Statement {
 
-  record ProcCall(Id name, ExpressionList params) implements Statement {
   }
 }

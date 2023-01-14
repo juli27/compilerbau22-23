@@ -18,17 +18,17 @@ VAR -> 'var'
 
 ## Abstract Syntax
 ```
-Expression = Literal | Id
+Expression = Literal | Var
 Statement = VarDecl | Assigmnent | ProcCall
 ExpressionList * Expression
 StatementList * Statement
 
 Literal(Token token)
-Id(Token token)
+Var(Token token)
 
-VarDecl(Id name, Id type, Expression value)
-Assignment(Identifier name, Expression value)
-ProcCall(Id name, ExpressionList params)
+VarDecl(Token name, Token type, Expression value)
+Assignment(Token name, Expression value)
+ProcCall(Token name, ExpressionList params)
 ```
 
 ### Translation
@@ -36,7 +36,7 @@ ProcCall(Id name, ExpressionList params)
 expr -> INT
   = Literal(INT)
 expr -> ID
-  = Id(ID)
+  = Var(ID)
 procParams: expr (COMMA expr)*
   = ExpressionList(expr_1, ..., expr_n)
 procCall: ID LPAREN procParams? RPAREN NL
