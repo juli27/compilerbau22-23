@@ -55,8 +55,8 @@ public class AstTranslator extends KurzBaseVisitor<Object> {
 
   @Override
   public Object visitVarDecl(VarDeclContext ctx) {
-    var id = (Id) visit(ctx.ID());
-    var type = (Id) visit(ctx.TYPE());
+    var id = (Id) visit(ctx.ID(0));
+    var type = (Id) visit(ctx.ID(1));
     var expr = (Expression) visit(ctx.expr());
 
     return new VarDecl(id, type, expr);
@@ -104,7 +104,7 @@ public class AstTranslator extends KurzBaseVisitor<Object> {
     var token = node.getSymbol();
 
     return switch (token.getType()) {
-      case KurzLexer.ID, KurzLexer.TYPE -> new Id(token);
+      case KurzLexer.ID -> new Id(token);
       case KurzLexer.INT -> new Literal(token);
       default -> super.visitTerminal(node);
     };
