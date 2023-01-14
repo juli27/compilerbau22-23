@@ -4,8 +4,7 @@ grammar Kurz;
 package de.uulm.compiler.parser;
 }
 
-program: NL? statements? EOF;
-statements: statement statements?;
+program: NL? statement* EOF;
 statement: varDecl | assignment | procCall;
 varDecl: VAR ID (COLON ID)? EQ expr NL;
 assignment: ID EQ expr NL;

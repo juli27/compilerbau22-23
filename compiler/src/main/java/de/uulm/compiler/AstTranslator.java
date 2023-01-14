@@ -12,9 +12,7 @@ import de.uulm.compiler.parser.KurzParser.ProcCallContext;
 import de.uulm.compiler.parser.KurzParser.ProcParamsContext;
 import de.uulm.compiler.parser.KurzParser.ProgramContext;
 import de.uulm.compiler.parser.KurzParser.StatementContext;
-import de.uulm.compiler.parser.KurzParser.StatementsContext;
 import de.uulm.compiler.parser.KurzParser.VarDeclContext;
-import java.util.ArrayList;
 import java.util.List;
 import org.antlr.v4.runtime.Token;
 
@@ -22,25 +20,10 @@ public class AstTranslator extends KurzBaseVisitor<Object> {
 
   @Override
   public Program visitProgram(ProgramContext ctx) {
-    var statements = ctx.statements();
-
-    if (statements == null) {
-      return new Program(List.of());
-    }
-
-    return visitStatements(statements);
-  }
-
-  @Override
-  public Program visitStatements(StatementsContext ctx) {
-    List<Statement> statements = new ArrayList<>();
-
-    statements.add(visitStatement(ctx.statement()));
-
-    if (ctx.statements() != null) {
-      var program = visitStatements(ctx.statements());
-      statements.addAll(program.statements());
-    }
+    var statements = ctx.statement()
+        .stream()
+        .map(this::visitStatement)
+        .toList();
 
     return new Program(statements);
   }
