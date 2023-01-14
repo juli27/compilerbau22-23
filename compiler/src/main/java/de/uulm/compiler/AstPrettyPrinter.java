@@ -1,10 +1,14 @@
 package de.uulm.compiler;
 
-import de.uulm.compiler.Expression.Id;
-import de.uulm.compiler.Expression.Literal;
-import de.uulm.compiler.Statement.Assignment;
-import de.uulm.compiler.Statement.ProcCall;
-import de.uulm.compiler.Statement.VarDecl;
+import de.uulm.compiler.ast.AstVisitor;
+import de.uulm.compiler.ast.Expression;
+import de.uulm.compiler.ast.Expression.Id;
+import de.uulm.compiler.ast.Expression.Literal;
+import de.uulm.compiler.ast.Program;
+import de.uulm.compiler.ast.Statement;
+import de.uulm.compiler.ast.Statement.Assignment;
+import de.uulm.compiler.ast.Statement.ProcCall;
+import de.uulm.compiler.ast.Statement.VarDecl;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.function.Consumer;

@@ -1,10 +1,13 @@
 package de.uulm.compiler;
 
-import de.uulm.compiler.Expression.Id;
-import de.uulm.compiler.Expression.Literal;
-import de.uulm.compiler.Statement.Assignment;
-import de.uulm.compiler.Statement.ProcCall;
-import de.uulm.compiler.Statement.VarDecl;
+import de.uulm.compiler.ast.Expression;
+import de.uulm.compiler.ast.Expression.Id;
+import de.uulm.compiler.ast.Expression.Literal;
+import de.uulm.compiler.ast.Program;
+import de.uulm.compiler.ast.Statement;
+import de.uulm.compiler.ast.Statement.Assignment;
+import de.uulm.compiler.ast.Statement.ProcCall;
+import de.uulm.compiler.ast.Statement.VarDecl;
 import de.uulm.compiler.parser.KurzBaseVisitor;
 import de.uulm.compiler.parser.KurzParser.AssignmentContext;
 import de.uulm.compiler.parser.KurzParser.ExprContext;
@@ -14,7 +17,6 @@ import de.uulm.compiler.parser.KurzParser.ProgramContext;
 import de.uulm.compiler.parser.KurzParser.StatementContext;
 import de.uulm.compiler.parser.KurzParser.VarDeclContext;
 import java.util.List;
-import org.antlr.v4.runtime.Token;
 
 public class AstTranslator extends KurzBaseVisitor<Object> {
 

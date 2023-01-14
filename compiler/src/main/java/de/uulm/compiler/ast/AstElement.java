@@ -1,4 +1,4 @@
-package de.uulm.compiler;
+package de.uulm.compiler.ast;
 
 public interface AstElement {
 
