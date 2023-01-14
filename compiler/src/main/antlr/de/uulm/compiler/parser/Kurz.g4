@@ -6,7 +6,7 @@ package de.uulm.compiler.parser;
 
 program: NL? statement* EOF;
 statement: varDecl | assignment | procCall;
-varDecl: VAR ID (COLON ID)? EQ expr NL;
+varDecl: VAR ID COLON ID EQ expr NL;
 assignment: ID EQ expr NL;
 procCall: ID LPAREN procParams? RPAREN NL;
 procParams: expr (COMMA expr)*;

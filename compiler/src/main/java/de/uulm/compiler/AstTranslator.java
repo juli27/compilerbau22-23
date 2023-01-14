@@ -36,12 +36,7 @@ public class AstTranslator extends KurzBaseVisitor<Object> {
   @Override
   public VarDecl visitVarDecl(VarDeclContext ctx) {
     var name = ctx.ID(0).getSymbol();
-
-    Token type = null;
-    if (ctx.ID(1) != null) {
-      type = ctx.ID(1).getSymbol();
-    }
-
+    var type = ctx.ID(1).getSymbol();
     var expr = visitExpr(ctx.expr());
 
     return new VarDecl(name, type, expr);
