@@ -7,14 +7,16 @@ import java.nio.file.Path;
 import java.util.concurrent.Callable;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-@Command
 public final class Compiler implements Callable<Integer> {
 
-  @Parameters(index = "0")
+  @Parameters(index = "0", description = "Kurz source file")
   private Path inputFile;
+
+  @Option(names = "--print-ast", description = "Pretty-print the AST, then exit", defaultValue = "false")
+  private boolean printAst;
 
   @Override
   public Integer call() throws Exception {
@@ -27,7 +29,9 @@ public final class Compiler implements Callable<Integer> {
     var visitor = new AstTranslator();
     var ast = visitor.visitProgram(parser.program());
 
-    System.out.println(ast);
+    if (printAst) {
+      ast.accept(new AstPrettyPrinter());
+    }
 
     return 0;
   }
