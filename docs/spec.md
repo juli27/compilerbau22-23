@@ -10,9 +10,60 @@ procedure(x)
 ```
 
 ## Lexical Structure
+### Whitespace
+```
+WS -> [ \t]
+NL -> ('\r'? '\n' | '\r')+
+```
+Tokens of type `WS` are discarded.
+
+### Punctuation
+```
+LPAREN -> '('
+RPAREN -> ')'
+EQ -> '='
+COMMA -> ','
+COLON -> ':'
+```
+
+### Keywords
 ```
 VAR -> 'var'
 ```
+
+### Identifier
+```
+ID -> Letter (AlphaNum)*
+```
+An identifier is a name for one of the following program elements:
+1. [type](#types)
+2. [variable](#variables)
+3. [function](#functions)
+
+### Literals
+```
+INT -> Digit+
+```
+
+### Fragments
+```
+AlphaNum -> Letter | Digit
+Letter -> [a-zA-Z]
+Digit -> [0-9];
+```
+
+## Types
+
+## Variables
+### Declaration
+A variable is introduced via a variable declaration statement:
+```
+varDecl -> 'var' ID ':' ID '=' expr NL
+```
+
+### Referencing
+
+## Functions
 
 ## Context-Free Grammar
 

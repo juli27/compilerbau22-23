@@ -12,17 +12,20 @@ procCall: ID LPAREN procParams? RPAREN NL;
 procParams: expr (COMMA expr)*;
 expr: INT | ID;
 
-VAR: 'var';
+WS: [ \t] -> skip;
+NL: ('\r'? '\n' | '\r')+;
+
 LPAREN: '(';
 RPAREN: ')';
 EQ: '=';
 COMMA: ',';
 COLON: ':';
-ID: Letter (Letter | Digit)*;
-INT: '0' | NonZeroDigit Digit*;
-NL: ('\r'? '\n' | '\r')+;
-WS: [ \t] -> skip;
 
+VAR: 'var';
+
+ID: Letter (AlphaNum)*;
+INT: Digit+;
+
+fragment AlphaNum: Letter | Digit;
 fragment Letter: [a-zA-Z];
-fragment Digit: '0' | NonZeroDigit;
-fragment NonZeroDigit: [1-9];
+fragment Digit: [0-9];
