@@ -3,7 +3,7 @@ package de.uulm.compiler.ast;
 import java.util.List;
 import org.antlr.v4.runtime.Token;
 
-public interface Statement extends AstElement {
+public interface Statement extends KurzAst {
 
   record VarDecl(Token name, Token type, Expression value) implements Statement {
 

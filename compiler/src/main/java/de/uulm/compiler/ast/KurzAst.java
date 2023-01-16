@@ -1,6 +1,6 @@
 package de.uulm.compiler.ast;
 
-public interface AstElement {
+public interface KurzAst {
 
   <T> T accept(AstVisitor<T> visitor);
 }
