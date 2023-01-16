@@ -26,8 +26,8 @@ public final class Compiler implements Callable<Integer> {
     var lexer = new KurzLexer(charStream);
     var parser = new KurzParser(new CommonTokenStream(lexer));
 
-    var visitor = new AstTranslator();
-    var ast = visitor.visitProgram(parser.program());
+    var astGenerator = new AstGenerator();
+    var ast = astGenerator.visitProgram(parser.program());
 
     if (printAst) {
       ast.accept(new AstPrettyPrinter());

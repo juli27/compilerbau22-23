@@ -18,7 +18,7 @@ import de.uulm.compiler.parser.KurzParser.StatementContext;
 import de.uulm.compiler.parser.KurzParser.VarDeclContext;
 import java.util.List;
 
-public class AstTranslator extends KurzBaseVisitor<Object> {
+public class AstGenerator extends KurzBaseVisitor<Object> {
 
   @Override
   public Program visitProgram(ProgramContext ctx) {
