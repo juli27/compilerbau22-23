@@ -7,7 +7,7 @@ import de.uulm.compiler.ast.Expression.Literal;
 import de.uulm.compiler.ast.Program;
 import de.uulm.compiler.ast.Statement;
 import de.uulm.compiler.ast.Statement.Assignment;
-import de.uulm.compiler.ast.Statement.ProcCall;
+import de.uulm.compiler.ast.Statement.FuncCall;
 import de.uulm.compiler.ast.Statement.VarDecl;
 import java.io.PrintStream;
 import java.util.List;
@@ -48,12 +48,12 @@ public final class AstPrettyPrinter implements AstVisitor<Void> {
   }
 
   @Override
-  public Void visitProcCall(ProcCall procCall) {
-    out.print("ProcCall[name=");
-    out.print(procCall.name());
+  public Void visitFuncCall(FuncCall funcCall) {
+    out.print("FuncCall[name=");
+    out.print(funcCall.name());
     out.print(", params=");
 
-    printList(procCall.params(), expression -> {
+    printList(funcCall.params(), expression -> {
       out.println();
       indent();
       expression.accept(this);

@@ -5,11 +5,11 @@ package de.uulm.compiler.parser;
 }
 
 program: NL? statement* EOF;
-statement: varDecl | assignment | procCall;
+statement: varDecl | assignment | funcCall;
 varDecl: VAR ID COLON ID EQ expr NL;
 assignment: ID EQ expr NL;
-procCall: ID LPAREN procParams? RPAREN NL;
-procParams: expr (COMMA expr)*;
+funcCall: ID LPAREN funcParams? RPAREN NL;
+funcParams: expr (COMMA expr)*;
 expr: INT | ID;
 
 WS: [ \t] -> skip;

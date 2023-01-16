@@ -6,13 +6,13 @@ import de.uulm.compiler.ast.Expression.Literal;
 import de.uulm.compiler.ast.Program;
 import de.uulm.compiler.ast.Statement;
 import de.uulm.compiler.ast.Statement.Assignment;
-import de.uulm.compiler.ast.Statement.ProcCall;
+import de.uulm.compiler.ast.Statement.FuncCall;
 import de.uulm.compiler.ast.Statement.VarDecl;
 import de.uulm.compiler.parser.KurzBaseVisitor;
 import de.uulm.compiler.parser.KurzParser.AssignmentContext;
 import de.uulm.compiler.parser.KurzParser.ExprContext;
-import de.uulm.compiler.parser.KurzParser.ProcCallContext;
-import de.uulm.compiler.parser.KurzParser.ProcParamsContext;
+import de.uulm.compiler.parser.KurzParser.FuncCallContext;
+import de.uulm.compiler.parser.KurzParser.FuncParamsContext;
 import de.uulm.compiler.parser.KurzParser.ProgramContext;
 import de.uulm.compiler.parser.KurzParser.StatementContext;
 import de.uulm.compiler.parser.KurzParser.VarDeclContext;
@@ -53,15 +53,15 @@ public class AstTranslator extends KurzBaseVisitor<Object> {
   }
 
   @Override
-  public ProcCall visitProcCall(ProcCallContext ctx) {
+  public FuncCall visitFuncCall(FuncCallContext ctx) {
     var name = ctx.ID().getSymbol();
-    var params = visitProcParams(ctx.procParams());
+    var params = visitFuncParams(ctx.funcParams());
 
-    return new ProcCall(name, params);
+    return new FuncCall(name, params);
   }
 
   @Override
-  public List<Expression> visitProcParams(ProcParamsContext ctx) {
+  public List<Expression> visitFuncParams(FuncParamsContext ctx) {
     return ctx.expr()
         .stream()
         .map(this::visitExpr)

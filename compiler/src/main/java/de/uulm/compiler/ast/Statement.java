@@ -21,11 +21,11 @@ public interface Statement extends KurzAst {
     }
   }
 
-  record ProcCall(Token name, List<Expression> params) implements Statement {
+  record FuncCall(Token name, List<Expression> params) implements Statement {
 
     @Override
     public <T> T accept(AstVisitor<T> visitor) {
-      return visitor.visitProcCall(this);
+      return visitor.visitFuncCall(this);
     }
   }
 }

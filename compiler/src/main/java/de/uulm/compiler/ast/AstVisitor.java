@@ -3,7 +3,7 @@ package de.uulm.compiler.ast;
 import de.uulm.compiler.ast.Expression.Id;
 import de.uulm.compiler.ast.Expression.Literal;
 import de.uulm.compiler.ast.Statement.Assignment;
-import de.uulm.compiler.ast.Statement.ProcCall;
+import de.uulm.compiler.ast.Statement.FuncCall;
 import de.uulm.compiler.ast.Statement.VarDecl;
 
 public interface AstVisitor<T> {
@@ -14,7 +14,7 @@ public interface AstVisitor<T> {
 
   T visitAssignment(Assignment assignment);
 
-  T visitProcCall(ProcCall procCall);
+  T visitFuncCall(FuncCall funcCall);
 
   T visitLiteral(Literal literal);
 
