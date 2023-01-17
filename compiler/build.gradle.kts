@@ -1,6 +1,6 @@
 plugins {
-    id("application")
-    id("antlr")
+    application
+    antlr
 }
 
 group = "org.example"
@@ -22,7 +22,7 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(19))
     }
 }
 
@@ -32,9 +32,9 @@ application {
 }
 
 tasks.generateGrammarSource {
-    arguments = arguments + listOf("-visitor")
+    arguments = arguments + listOf("-listener", "-visitor")
 }
 
-tasks.getByName<Test>("test") {
+tasks.test {
     useJUnitPlatform()
 }
