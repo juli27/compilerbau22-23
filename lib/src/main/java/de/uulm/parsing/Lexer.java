@@ -5,9 +5,7 @@ public interface Lexer<C> {
   Token<C> nextToken();
 
   static Lexer<Character> trivial(final String input) {
-    return new Lexer<>() {
-      private int currentPos = 0;
-
+    return new StringLexer<>(input) {
       @Override
       public Token<Character> nextToken() {
         if (isAtEnd()) {
@@ -15,14 +13,6 @@ public interface Lexer<C> {
         }
 
         return Token.trivial(advance());
-      }
-
-      private boolean isAtEnd() {
-        return currentPos >= input.length();
-      }
-
-      private char advance() {
-        return input.charAt(currentPos++);
       }
     };
   }
