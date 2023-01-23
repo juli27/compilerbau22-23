@@ -16,7 +16,7 @@ public abstract class RecursiveDescentParser<C> {
     return new ParseException(reason);
   }
 
-  public Token<C> peek() {
+  protected Token<C> peek() {
     return currentToken;
   }
 
@@ -34,11 +34,11 @@ public abstract class RecursiveDescentParser<C> {
 
     return false;
   }
-
   protected Token<C> advance() {
+    var previousToken = currentToken;
     currentToken = lexer.nextToken();
 
-    return currentToken;
+    return previousToken;
   }
 
   protected boolean match(C tokenClass) {
