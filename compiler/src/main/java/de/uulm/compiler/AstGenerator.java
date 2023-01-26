@@ -3,6 +3,7 @@ package de.uulm.compiler;
 import de.uulm.compiler.ast.Expression;
 import de.uulm.compiler.ast.Expression.Id;
 import de.uulm.compiler.ast.Expression.Literal;
+import de.uulm.compiler.ast.KurzAst;
 import de.uulm.compiler.ast.Program;
 import de.uulm.compiler.ast.Statement;
 import de.uulm.compiler.ast.Statement.Assignment;
@@ -18,7 +19,7 @@ import de.uulm.compiler.parser.KurzParser.StatementContext;
 import de.uulm.compiler.parser.KurzParser.VarDeclContext;
 import java.util.List;
 
-public class AstGenerator extends KurzBaseVisitor<Object> {
+public class AstGenerator extends KurzBaseVisitor<KurzAst> {
 
   @Override
   public Program visitProgram(ProgramContext ctx) {
@@ -55,17 +56,9 @@ public class AstGenerator extends KurzBaseVisitor<Object> {
   @Override
   public FuncCall visitFuncCall(FuncCallContext ctx) {
     var name = ctx.ID().getSymbol();
-    var params = visitFuncParams(ctx.funcParams());
+    var params = convertFuncParamsToList(ctx.funcParams());
 
     return new FuncCall(name, params);
-  }
-
-  @Override
-  public List<Expression> visitFuncParams(FuncParamsContext ctx) {
-    return ctx.expr()
-        .stream()
-        .map(this::visitExpr)
-        .toList();
   }
 
   @Override
@@ -75,5 +68,12 @@ public class AstGenerator extends KurzBaseVisitor<Object> {
     }
 
     return new Literal(ctx.INT().getSymbol());
+  }
+
+  private List<Expression> convertFuncParamsToList(FuncParamsContext ctx) {
+    return ctx.expr()
+        .stream()
+        .map(this::visitExpr)
+        .toList();
   }
 }
