@@ -2,8 +2,8 @@ package de.uulm.compiler;
 
 import de.uulm.compiler.ast.AstVisitor;
 import de.uulm.compiler.ast.Expression;
-import de.uulm.compiler.ast.Expression.Id;
 import de.uulm.compiler.ast.Expression.Literal;
+import de.uulm.compiler.ast.Expression.Var;
 import de.uulm.compiler.ast.Program;
 import de.uulm.compiler.ast.Statement;
 import de.uulm.compiler.ast.Statement.Assignment;
@@ -72,8 +72,8 @@ public final class AstPrettyPrinter implements AstVisitor<Void> {
   }
 
   @Override
-  public Void visitId(Id id) {
-    out.print(id);
+  public Void visitVar(Var var) {
+    out.print(var);
 
     return null;
   }

@@ -12,11 +12,11 @@ public interface Expression extends KurzAst {
     }
   }
 
-  record Id(Token token) implements Expression {
+  record Var(Token name) implements Expression {
 
     @Override
     public <T> T accept(AstVisitor<T> visitor) {
-      return visitor.visitId(this);
+      return visitor.visitVar(this);
     }
   }
 }

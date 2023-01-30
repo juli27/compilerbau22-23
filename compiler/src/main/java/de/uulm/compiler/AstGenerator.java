@@ -1,8 +1,8 @@
 package de.uulm.compiler;
 
 import de.uulm.compiler.ast.Expression;
-import de.uulm.compiler.ast.Expression.Id;
 import de.uulm.compiler.ast.Expression.Literal;
+import de.uulm.compiler.ast.Expression.Var;
 import de.uulm.compiler.ast.KurzAst;
 import de.uulm.compiler.ast.Program;
 import de.uulm.compiler.ast.Statement;
@@ -64,7 +64,7 @@ public class AstGenerator extends KurzBaseVisitor<KurzAst> {
   @Override
   public Expression visitExpr(ExprContext ctx) {
     if (ctx.ID() != null) {
-      return new Id(ctx.ID().getSymbol());
+      return new Var(ctx.ID().getSymbol());
     }
 
     return new Literal(ctx.INT().getSymbol());
