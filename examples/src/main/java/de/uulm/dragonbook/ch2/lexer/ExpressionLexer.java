@@ -57,7 +57,7 @@ public final class ExpressionLexer extends StringLexer<TokenClass> {
 
   private void whitespace() {
     while (isWhitespace(peek())) {
-      char c = advance();
+      var c = advance();
       if (c == '\n') {
         line++;
       }
@@ -65,7 +65,7 @@ public final class ExpressionLexer extends StringLexer<TokenClass> {
   }
 
   private Num num() {
-    int v = 0;
+    var v = 0;
 
     while (Character.isDigit(peek())) {
       v = 10 * v + Character.digit(advance(), 10);
@@ -75,14 +75,14 @@ public final class ExpressionLexer extends StringLexer<TokenClass> {
   }
 
   private Word idOrKeyword() {
-    StringBuilder lexemeBuilder = new StringBuilder();
+    var lexemeBuilder = new StringBuilder();
     lexemeBuilder.append(advance());
 
     while (Character.isLetterOrDigit(peek())) {
       lexemeBuilder.append(advance());
     }
 
-    String lexeme = lexemeBuilder.toString();
+    var lexeme = lexemeBuilder.toString();
 
     return words.computeIfAbsent(lexeme, s -> new Word(TokenClass.ID, s));
   }

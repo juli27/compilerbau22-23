@@ -28,7 +28,7 @@ public final class ExpressionLexer implements Lexer<TokenClass> {
 
     start = currentPos;
 
-    char c = advance();
+    var c = advance();
 
     return switch (c) {
       case '+' -> ExpressionToken.plus();

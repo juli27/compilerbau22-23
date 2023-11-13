@@ -24,7 +24,7 @@ final class Parser extends RecursiveDescentParser<Character> {
 
   public static void main(String[] args) {
     Examples.forEachLineWithAcceptingParser(s -> {
-      Parser parser = new Parser(Lexer.trivial(s));
+      var parser = new Parser(Lexer.trivial(s));
 
       return parser::parse;
     });

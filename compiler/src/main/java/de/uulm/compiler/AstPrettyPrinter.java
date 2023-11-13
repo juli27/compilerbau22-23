@@ -82,11 +82,9 @@ public final class AstPrettyPrinter implements AstVisitor<Void> {
     if (o instanceof Program p) {
       return p.accept(this);
     }
-
     if (o instanceof Expression e) {
       return e.accept(this);
     }
-
     if (o instanceof Statement s) {
       return s.accept(this);
     }
@@ -119,7 +117,7 @@ public final class AstPrettyPrinter implements AstVisitor<Void> {
   }
 
   private void indent() {
-    for (int i = 0; i < indentLevel; ++i) {
+    for (var i = 0; i < indentLevel; ++i) {
       out.print("  ");
     }
   }

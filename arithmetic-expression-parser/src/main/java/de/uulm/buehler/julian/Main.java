@@ -16,7 +16,7 @@ final class Main {
         .map(ExpressionParser::new)
         .forEach(parser -> {
           try {
-            double value = parser.parse();
+            var value = parser.parse();
 
             System.out.println(value);
           } catch (ParseException pe) {

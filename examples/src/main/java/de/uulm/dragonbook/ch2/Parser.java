@@ -9,7 +9,7 @@ final class Parser extends RecursiveDescentParser<Character> {
 
   public static void main(String[] args) {
     Examples.forEachLine(s -> {
-      Parser parser = new Parser(Lexer.trivial(s));
+      var parser = new Parser(Lexer.trivial(s));
 
       try {
         System.out.println(parser.parse());
